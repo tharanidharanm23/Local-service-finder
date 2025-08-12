@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" href="img/shake_hands.jpeg">
+  <link rel="stylesheet" href="profile.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>TrustyTown</title>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>TrustyTown</h1>
+    <h4>Your Local service finder app 🔎</h4>
+  </div>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <h1>Welcome!</h1>
+    <ul>
+      <li><a href="index.html">Home</a></li><p>|</p>
+      <li><a href="about.html">About</a></li><p>|</p>
+      <li><a href="contact.html">Contact Us</a></li><p>|</p>
+      <li><a href="profile.html">Profile</a></li><p>|</p>
+      <li><a href="register.html">Register</a></li>
+    </ul>
+  </div>
+
+  <!-- PROFILE DETAILS ONLY (no picture) -->
+  <div class="profile-container">
+    <div class="profile-details">
+      <h2>Welcome, <span id="user-name">User</span> 👋</h2>
+      <ul id="profile-details"></ul>
+
+      <!-- Availability Switch -->
+      <div class="switch-row">
+        <span id="avail-label">Rest</span>
+        <label class="switch">
+          <input type="checkbox" id="avail-toggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div id="work-box" class="work-box" style="display:none;">
+        <h3>Your Work</h3>
+        <ul id="work-details"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="center-btn">
+    <button id="add-work-btn" onclick="location.href='addwork.html'">+ Add Work</button>
+    <button id="update-btn" onclick="location.href='update.html'">Update Details</button>
+    <button id="logout-btn">Logout</button>
+    <button id="delete-btn">Delete Account</button>
+  </div>
+
+
+  
+
+
+
+</body>
+</html>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // ─── Auth check ───
+  const user = JSON.parse(localStorage.getItem("userProfile"));
+  if (!user) {
+    alert("Please log in or register first!");
+    location.href = "login.html";
+    return;
+  }
+
+  // ─── Load profile ───
+  document.getElementById("user-name").textContent = user.name ?? "User";
+  document.getElementById("profile-details").innerHTML = `
+    <li><strong>Age:</strong> ${user.age ?? "-"}</li>
+    <li><strong>Gender:</strong> ${user.gender ?? "-"}</li>
+    <li><strong>District:</strong> ${user.district ?? "-"}</li>
+    <li><strong>Phone:</strong> ${user.phone ?? "-"}</li>
+    <li><strong>Email:</strong> ${user.email ?? "-"}</li>
+    <li><strong>Address:</strong> ${user.address ?? "-"}</li>
+    <li><strong>Pincode:</strong> ${user.pincode ?? "-"}</li>
+    <li><strong>Date of Birth:</strong> ${user.dob ?? "-"}</li>
+  `;
+
+  // ─── Work info ───
+  const work = JSON.parse(localStorage.getItem("workProfile"));
+  const hasWork = !!(work && work.work);
+  const workBox = document.getElementById("work-box");
+  const workDetails = document.getElementById("work-details");
+
+  if (hasWork) {
+    workBox.style.display = "block";
+    workDetails.innerHTML = `
+      <li><strong>Work:</strong> ${work.work}</li>
+      <li><strong>Years of Experience:</strong> ${work.exp}</li>
+      <li><strong>Rating:</strong> ${work.rating ?? 0} ⭐</li>
+    `;
+  }
+
+  // ─── Availability toggle ───
+  const toggle = document.getElementById("avail-toggle");
+  const label = document.getElementById("avail-label");
+
+  if (hasWork) {
+    const saved = JSON.parse(localStorage.getItem("workAvail")) || false;
+    toggle.disabled = false;
+    toggle.checked = saved;
+    updateLabel(saved);
+  } else {
+    toggle.disabled = true;
+    label.textContent = "Add a work to enable this button";
+    label.style.color = "#dc3545";
+  }
+
+  toggle.addEventListener("change", () => {
+    if (toggle.disabled) return;
+    const state = toggle.checked;
+    updateLabel(state);
+    localStorage.setItem("workAvail", JSON.stringify(state));
+  });
+
+  function updateLabel(on) {
+    label.textContent = on ? "Available to work" : "Rest";
+    label.style.color = on ? "#28a745" : "#dc3545";
+  }
+
+  // ─── Logout ───
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    localStorage.clear();
+    location.href = "login.html";
+  });
+
+  // ─── Delete account ───
+  document.getElementById("delete-btn").addEventListener("click", async () => {
+    const input = prompt("To delete your account, enter your password:");
+    if (input !== user.password) {
+      alert("Incorrect password. Account not deleted.");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/delete-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: user.phone, password: input })
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        alert(result.message || "Account deleted.");
+        localStorage.clear();
+        location.href = "register.html";
+      } else {
+        alert(result.error || "Deletion failed.");
+      }
+    } catch (err) {
+      alert("Server error. Try again later.");
+    }
+  });
+
+  // AGE
+
+  function calculateAge(dob) {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const savedProfile = localStorage.getItem("userProfile");
+  if (!savedProfile) return;
+
+  const userData = JSON.parse(savedProfile);
+
+  // Prefill data
+  document.getElementById("name").textContent = userData.name || "";
+  document.getElementById("email").textContent = userData.email || "";
+  document.getElementById("phone").textContent = userData.phone || "";
+  document.getElementById("district").textContent = userData.district || "";
+  document.getElementById("address").textContent = userData.address || "";
+  document.getElementById("pincode").textContent = userData.pincode || "";
+
+  // Auto age
+  if (userData.dob) {
+    document.getElementById("age").textContent = calculateAge(userData.dob);
+  }
+});
+
+
+
+});
+</script>

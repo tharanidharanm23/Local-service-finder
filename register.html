@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" href="img/shake_hands.jpeg">
+        <link rel="stylesheet" href="register.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+        <title>TrustyTown</title>
+    </head>
+
+    <body>
+
+        <!--Header-->
+        <div class="header">
+            <h1>TrustyTown</h1>
+            <h4>Your Local service finder app 🔎</h4>
+        </div>
+
+        <!--NAVBAR-->
+        <div class="navbar">
+            <h1>Welcome!</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <p>|</p>
+                <li><a href="about.html">About</a></li>
+                <p>|</p>
+                <li><a href="contact.html">Contact Us</a></li>
+                <p>|</p>
+                <li><a href="profile.html">Profile</a></li>
+                <p>|</p>
+                <li><a href="register.html">Register</a></li>
+            </ul>
+        </div>
+
+         <!--Registration Form-->
+    <div class="form-container">
+        <h2>Registration Form</h2>
+        <form id="registerForm">
+
+
+
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="">-- Select Gender --</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="district">District:</label>
+            <select id="district" name="district" required>
+                <option value="Tiruppur">Tiruppur</option>
+            </select>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="10-digit number">
+
+            <label for="email">Email (Optional):</label>
+            <input type="email" id="email" name="email">
+
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" rows="3" required></textarea>
+
+            <label for="pincode">Pincode:</label>
+            <input type="text" id="pincode" name="pincode" pattern="[0-9]{6}" required placeholder="6-digit code">
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm">Confirm Password:</label>
+            <input type="password" id="confirm" name="confirm" required>
+
+            <button type="submit">Register</button>
+                
+            <p class="login-link">Already have an account? 
+            <a href="login.html">Login</a>
+            </p>
+        </form>
+ 
+    </div>
+    </body>
+</html>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("registerForm");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch("http://localhost:5000/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        alert(result.message || "Registered successfully!");
+        window.location.href = "profile.html"; // ✅ redirect to profile
+      } else {
+        alert(result.error || "Registration failed.");
+      }
+    } catch (error) {
+      alert("Error connecting to server.");
+      console.error(error);
+    }
+  });
+});
+</script>
+
+
+
+
+
+

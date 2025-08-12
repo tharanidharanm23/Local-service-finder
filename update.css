@@ -1,0 +1,184 @@
+       body {
+            margin: 0;
+            padding: 0;
+            background-image: url('bg img.jpg'); 
+            background-size: cover;  
+            background-repeat: no-repeat;
+            background-position: center center;
+            
+        }
+
+html {
+    scrollbar-gutter: stable;
+}
+
+.header{
+    background-color: rgb(47, 0, 255);
+    padding: 10px;
+}
+
+.header h1,h4{
+     text-align: center;
+    color: white;
+    font-size: 30px;
+    font-family:'Times New Roman', Times, serif;
+}
+
+/*NAV BAR*/
+
+.navbar {
+  background-color: #352fcf;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* pushes h1 left and menu right */
+  flex-wrap: wrap; /* makes it wrap on small screens */
+}
+
+.navbar h1 {
+  font-size: 30px;
+  margin: 0;
+  color: white;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 15px; /* space between items */
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  display: inline;
+}
+
+.navbar a,
+.navbar p {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.navbar p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6); /* softer separator */
+}
+
+.navbar a:hover {
+  color: gold;
+}
+
+/* Mobile-friendly: stack items */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar ul {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .navbar p {
+    display: none; /* hide | separators on mobile */
+  }
+}
+
+
+
+
+/* === Update Form Styles === */
+
+
+.profile-container {
+  background: #fff;
+  padding: 25px 50px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  animation: fadeIn 0.4s ease;
+}
+
+.profile-container h2 {
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  color: #222;
+  font-weight: 600;
+}
+
+#updateForm label {
+  display: block;
+  font-weight: 600;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+#updateForm input,
+#updateForm select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+#updateForm input:focus,
+#updateForm select:focus {
+  border-color: #2563eb;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+#updateForm button {
+  padding: 12px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.1s ease;
+}
+
+#saveBtn {
+  background-color: #2563eb;
+  color: white;
+}
+
+#saveBtn:hover {
+  background-color: #1d4ed8;
+}
+
+#cancelBtn {
+  background-color: #6b7280;
+  color: white;
+}
+
+#cancelBtn:hover {
+  background-color: #4b5563;
+}
+
+#updateForm button:active {
+  transform: scale(0.97);
+}
+
+/* Smooth form animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .profile-container {
+    padding: 18px;
+    border-radius: 10px;
+  }
+  #updateForm button {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+}

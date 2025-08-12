@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Work – TrustyTown</title>
+  <link rel="stylesheet" href="addwork.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <h1>TrustyTown</h1>
+    <h4>Your Local service finder app 🔎</h4>
+  </div>
+
+  <!-- Navbar (minimal) -->
+  <div class="navbar">
+    <ul>
+      <li><a href="profile.html">⬅ Back to Profile</a></li>
+    </ul>
+  </div>
+
+  <!-- Work‑registration form -->
+  <div class="form-container">
+    <h2>Add Work Details</h2>
+    <form id="work-form" onsubmit="saveWork(event)">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" required>
+
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob" required>
+
+      <label for="age">Age:</label>
+      <input type="number" id="age" required>
+
+      <label for="address">Address:</label>
+      <textarea id="address" rows="2" required></textarea>
+
+      <label for="gender">Gender:</label>
+      <select id="gender" required>
+        <option value="">-- Select --</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+
+      <label for="work">Work Type:</label>
+      <select id="work" required>
+        <option value="">-- Select Work --</option>
+        <option>Plumber</option>
+        <option>Electrician</option>
+        <option>Repair Man</option>
+        <option>Babysitter</option>
+        <option>Home Tutor</option>
+        <option>Auto Driver</option>
+        <option>Mechanic</option>
+        <option>Maid</option>
+      </select>
+
+      <label for="exp">Years of Experience:</label>
+      <input type="number" id="exp" required min="0">
+
+
+
+      <button type="submit">Save</button>
+    </form>
+  </div>
+
+
+</body>
+</html>
+
+
+
+  <script>
+    /*  toggle label + colour  */
+    function toggleAvail() {
+      const label = document.getElementById('switch-label');
+      const on = document.getElementById('avail').checked;
+      label.textContent = on ? 'Available to work' : 'Rest';
+      label.style.color  = on ? '#28a745' : '#dc3545';
+    }
+
+    /*  dummy save – store in localStorage then back to profile  */
+    function saveWork(e) {
+      e.preventDefault();
+      const data = {
+        name   : document.getElementById('name').value,
+        dob    : document.getElementById('dob').value,
+        age    : document.getElementById('age').value,
+        address: document.getElementById('address').value,
+        gender : document.getElementById('gender').value,
+        work   : document.getElementById('work').value,
+        exp    : document.getElementById('exp').value,
+        avail  : document.getElementById('avail').checked
+      };
+      localStorage.setItem('workProfile', JSON.stringify(data));
+      alert('Work details saved!');
+      location.href = 'profile.html';
+    }
+
+    /* initialise switch colour on load */
+    toggleAvail();
+
+
+    if (!localStorage.getItem('userProfile')) {
+  alert('Please log in or register first!');
+  location.href = 'login.html';   // or 'register.html'
+}
+
+function saveWork(e) {
+  e.preventDefault();
+
+  const data = {
+    work   : document.getElementById('work').value,
+    exp    : document.getElementById('exp').value,
+    rating : 0              // default rating, or collect from form later
+  };
+
+  localStorage.setItem('workProfile', JSON.stringify(data));
+  alert('Work details saved!');
+  location.href = 'profile.html';
+}
+  </script>

@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Update Profile — TrustyTown</title>
   <link rel="stylesheet" href="update.css">
+  <style>
+
+  </style>
 </head>
 <body>
   <div class="header">
@@ -70,8 +73,8 @@
       </div>
     </form>
   </div>
-  <div id="toast" class="toast">✅ Profile Updated Successfully!</div>
 
+  <div id="toast" class="toast"></div>
 
 <script>
 function calculateAge(dob) {
@@ -85,11 +88,23 @@ function calculateAge(dob) {
   return age;
 }
 
+function showToast(message, isError = false) {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.remove("error", "show");
+  if (isError) toast.classList.add("error");
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const user = JSON.parse(localStorage.getItem("userProfile"));
   if (!user) {
-    alert("No user logged in");
-    location.href = "login.html";
+    showToast("No user logged in", true);
+    setTimeout(() => location.href = "login.html", 2000);
     return;
   }
 
@@ -118,11 +133,11 @@ document.getElementById("updateForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const user = JSON.parse(localStorage.getItem("userProfile"));
-  if (!user) return alert("No user logged in");
+  if (!user) return showToast("No user logged in", true);
 
   const currentPassword = document.getElementById("currentPassword").value;
   if (currentPassword !== user.password) {
-    return alert("Current password is incorrect");
+    return showToast("Current password is incorrect", true);
   }
 
   const updatedUser = {
@@ -138,23 +153,28 @@ document.getElementById("updateForm").addEventListener("submit", async (e) => {
     password: document.getElementById("newPassword").value.trim() || user.password
   };
 
-  const res = await fetch("http://localhost:5000/update-user", {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedUser)
-  });
+  try {
+    const res = await fetch("http://localhost:5000/update-user", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedUser)
+    });
 
-  const data = await res.json();
-  alert(data.message || data.error);
+    const data = await res.json();
 
-  if (res.ok) {
-    // Update local storage so profile shows new info
+    if (!res.ok) {
+      return showToast(data.error || "Update failed", true);
+    }
+
+    // Success
     localStorage.setItem("userProfile", JSON.stringify(updatedUser));
-    location.href = "profile.html";
+    showToast("✅ Profile Updated Successfully!");
+    setTimeout(() => location.href = "profile.html", 3000);
+
+  } catch (err) {
+    showToast("Server error. Try again later.", true);
   }
 });
-
-
 </script>
 </body>
 </html>

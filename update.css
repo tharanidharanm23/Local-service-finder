@@ -183,25 +183,29 @@ html {
   }
 }
 
-
-.toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #28a745;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 6px;
-  font-size: 16px;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: all 0.4s ease;
-  z-index: 9999;
-}
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
+    /* Toast styling */
+    .toast {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #28a745; /* Green default */
+      color: white;
+      text-align: center;
+      border-radius: 8px;
+      padding: 14px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      top: 20px;
+      font-size: 16px;
+      transition: visibility 0s, opacity 0.5s ease-in-out;
+      opacity: 0;
+    }
+    .toast.show {
+      visibility: visible;
+      opacity: 1;
+    }
+    .toast.error {
+      background-color: #dc3545; /* Red for errors */
+    }
 

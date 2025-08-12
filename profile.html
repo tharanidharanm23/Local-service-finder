@@ -13,42 +13,46 @@
     <h4>Your Local service finder app 🔎</h4>
   </div>
 
-  <div class="navbar">
-    <h1>Welcome!</h1>
-    <ul>
-      <li><a href="index.html">Home</a></li><p>|</p>
-      <li><a href="about.html">About</a></li><p>|</p>
-      <li><a href="contact.html">Contact Us</a></li><p>|</p>
-      <li><a href="profile.html">Profile</a></li><p>|</p>
-      <li><a href="register.html">Register</a></li>
-    </ul>
-  </div>
+<div class="navbar">
+  <h1>Welcome!</h1>
+  <ul>
+    <li><a href="index.html">Home</a></li><p>|</p>
+    <li><a href="about.html">About</a></li><p>|</p>
+    <li><a href="contact.html">Contact Us</a></li><p>|</p>
+    <li><a href="profile.html" class="active">Profile</a></li><p>|</p>
+    <li><a href="register.html">Register</a></li>
+  </ul>
+</div>
 
-  <div class="profile-container">
-    <div class="profile-details">
-      <h2>Welcome, <span id="user-name">User</span> 👋</h2>
-      <ul id="profile-details"></ul>
+<div class="profile-container">
+  <div class="profile-details">
+    <h2>Welcome, <span id="user-name">User</span> 👋</h2>
+    <ul id="profile-details"></ul>
 
-      <div class="switch-row">
-        <span id="avail-label">Rest</span>
-        <label class="switch">
-          <input type="checkbox" id="avail-toggle">
-          <span class="slider"></span>
-        </label>
-      </div>
-      <div id="work-box" class="work-box" style="display:none;">
-        <h3>Your Work</h3>
-        <ul id="work-details"></ul>
-      </div>
+    <div class="switch-row">
+      <span id="avail-label">Rest</span>
+      <label class="switch" aria-label="Toggle work availability">
+        <input type="checkbox" id="avail-toggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div id="work-box" class="work-box" style="display:none;">
+      <h3>Your Work</h3>
+      <ul id="work-details"></ul>
+    </div>
+    <div id="no-work-msg" style="display:none; color:#777; margin-top:10px;">
+      No work added yet. Click <strong>+ Add Work</strong> to get started.
     </div>
   </div>
+</div>
 
-  <div class="center-btn">
-    <button id="add-work-btn" onclick="location.href='addwork.html'">+ Add Work</button>
-    <button id="update-btn">Update Details</button> <!-- ✅ fixed ID -->
-    <button id="logout-btn">Logout</button>
-    <button id="delete-btn">Delete Account</button>
-  </div>
+<div class="center-btn">
+  <button id="add-work-btn" aria-label="Add work details">+ Add Work</button>
+  <button id="update-btn" aria-label="Update profile details">Update Details</button>
+  <button id="logout-btn" aria-label="Logout from your account">Logout</button>
+  <button id="delete-btn" aria-label="Delete your account">Delete Account</button>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {

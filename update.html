@@ -7,16 +7,12 @@
   <link rel="stylesheet" href="update.css">
 </head>
 <body>
-
-  <!-- Header -->
   <div class="header">
     <h1>TrustyTown</h1>
     <h4>Your Local service finder app 🔎</h4>
   </div>
 
-  <!-- NAVBAR -->
   <div class="navbar">
-    <h1>Welcome!</h1>
     <ul>
       <li><a href="index.html">Home</a></li><p>|</p>
       <li><a href="about.html">About</a></li><p>|</p>
@@ -26,23 +22,18 @@
     </ul>
   </div>
 
-
-    <!--UPDATE FORM-->
   <div class="profile-container" style="max-width:700px;margin:40px auto;">
     <h2 style="text-align:center">Update Your Details</h2>
 
     <form id="updateForm">
-      <input type="hidden" id="originalPhone" />
-
       <label>Name</label>
-      <input id="name" type="text" required />
+      <input id="name" type="text" required>
 
-      <label>Date of birth</label>
-      <input id="dob" type="date" required />
+      <label>Date of Birth</label>
+      <input id="dob" type="date" required>
 
       <label>Age</label>
-      <input type="number" id="age" name="age" readonly>
-
+      <input id="age" type="number" readonly>
 
       <label>Gender</label>
       <select id="gender" required>
@@ -53,155 +44,117 @@
       </select>
 
       <label>District</label>
-      <input id="district" type="text" required />
+      <input id="district" type="text" required>
 
       <label>Phone</label>
-      <input id="phone" type="tel" required pattern="[0-9]{10}" />
+      <input id="phone" type="tel" required pattern="[0-9]{10}" readonly>
 
       <label>Email</label>
-      <input id="email" type="email" />
+      <input id="email" type="email">
 
       <label>Address</label>
-      <input id="address" type="text" required />
+      <input id="address" type="text" required>
 
       <label>Pincode</label>
-      <input id="pincode" type="text" pattern="[0-9]{6}" required />
+      <input id="pincode" type="text" pattern="[0-9]{6}" required>
 
       <label>New Password (leave blank to keep current)</label>
-      <input id="password" type="password" />
+      <input id="newPassword" type="password">
 
-      <label>Confirm Current Password (required)</label>
-      <input id="confirmPassword" type="password" required />
+      <label>Confirm Current Password</label>
+      <input id="currentPassword" type="password" required>
 
       <div style="display:flex;gap:12px;margin-top:14px">
-        <button id="saveBtn" type="submit" style="flex:1">Save changes</button>
-        <button id="cancelBtn" type="button" style="flex:1">Cancel</button>
+        <button type="submit" style="flex:1">Save changes</button>
+        <button type="button" id="cancelBtn" style="flex:1">Cancel</button>
       </div>
     </form>
   </div>
+  <div id="toast" class="toast">✅ Profile Updated Successfully!</div>
+
 
 <script>
-  // Cancel button
-  document.getElementById('cancelBtn').addEventListener('click', () => {
-    location.href = 'profile.html';
-  });
-
-  function calculateAge(dob) {
-    const birthDate = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
+function calculateAge(dob) {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
   }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const savedProfile = localStorage.getItem("userProfile");
-    if (!savedProfile) return;
-    const userData = JSON.parse(savedProfile);
-
-    // Fill fields
-    document.getElementById("name").value = userData.name || "";
-    document.getElementById("email").value = userData.email || "";
-    document.getElementById("phone").value = userData.phone || "";
-    document.getElementById("dob").value = userData.dob || "";
-    document.getElementById("age").value = userData.dob ? calculateAge(userData.dob) : "";
-    document.getElementById("district").value = userData.district || "";
-    document.getElementById("address").value = userData.address || "";
-    document.getElementById("pincode").value = userData.pincode || "";
-    document.getElementById("gender").value = userData.gender || "";
-
-    // Update age when DOB changes
-    document.getElementById("dob").addEventListener("input", function() {
-      document.getElementById("age").value = calculateAge(this.value);
-    });
-  });
-
-  // ✅ Handle form submission
-  document.getElementById("updateForm").addEventListener("submit", function(e) {
-    e.preventDefault(); // Stop normal form submit
-
-    const savedProfile = JSON.parse(localStorage.getItem("userProfile")) || {};
-
-    const confirmPassword = document.getElementById("confirmPassword").value;
-    if (confirmPassword !== savedProfile.password) {
-      alert("Current password is incorrect!");
-      return;
-    }
-
-    // Update object
-    savedProfile.name = document.getElementById("name").value;
-    savedProfile.email = document.getElementById("email").value;
-    savedProfile.phone = document.getElementById("phone").value;
-    savedProfile.dob = document.getElementById("dob").value;
-    savedProfile.age = document.getElementById("age").value;
-    savedProfile.gender = document.getElementById("gender").value;
-    savedProfile.district = document.getElementById("district").value;
-    savedProfile.address = document.getElementById("address").value;
-    savedProfile.pincode = document.getElementById("pincode").value;
-
-    const newPassword = document.getElementById("password").value;
-    if (newPassword.trim() !== "") {
-      savedProfile.password = newPassword; // change password if entered
-    }
-
-    // Save updated profile to localStorage
-    localStorage.setItem("userProfile", JSON.stringify(savedProfile));
-
-    alert("Profile updated successfully!");
-    location.href = "profile.html"; // Redirect back
-  });
+  return age;
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-    const storedUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (storedUser) {
-        document.getElementById("phone").value = storedUser.phone;
-        document.getElementById("name").value = storedUser.name;
-        document.getElementById("email").value = storedUser.email;
-        document.getElementById("dob").value = storedUser.dob;
-        document.getElementById("age").value = storedUser.age;
-        document.getElementById("gender").value = storedUser.gender;
-        document.getElementById("district").value = storedUser.district;
-        document.getElementById("address").value = storedUser.address;
-        document.getElementById("pincode").value = storedUser.pincode;
-    }
+  const user = JSON.parse(localStorage.getItem("userProfile"));
+  if (!user) {
+    alert("No user logged in");
+    location.href = "login.html";
+    return;
+  }
+
+  // Prefill fields
+  document.getElementById("name").value = user.name || "";
+  document.getElementById("dob").value = user.dob || "";
+  document.getElementById("age").value = user.dob ? calculateAge(user.dob) : "";
+  document.getElementById("gender").value = user.gender || "";
+  document.getElementById("district").value = user.district || "";
+  document.getElementById("phone").value = user.phone || "";
+  document.getElementById("email").value = user.email || "";
+  document.getElementById("address").value = user.address || "";
+  document.getElementById("pincode").value = user.pincode || "";
+
+  // Auto age calculation
+  document.getElementById("dob").addEventListener("input", function() {
+    document.getElementById("age").value = calculateAge(this.value);
+  });
 });
 
-document.getElementById("updateForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const formData = {
-        phone: document.getElementById("phone").value,
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        dob: document.getElementById("dob").value,
-        age: document.getElementById("age").value,
-        gender: document.getElementById("gender").value,
-        district: document.getElementById("district").value,
-        address: document.getElementById("address").value,
-        pincode: document.getElementById("pincode").value,
-        password: document.getElementById("password").value,
-        newPassword: document.getElementById("newPassword").value
-    };
-
-    const res = await fetch("/update-profile", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-    });
-
-    const data = await res.json();
-    alert(data.message || data.error);
-
-    if (data.user) {
-        localStorage.setItem("loggedInUser", JSON.stringify(data.user));
-    }
+document.getElementById("cancelBtn").addEventListener("click", () => {
+  location.href = "profile.html";
 });
+
+document.getElementById("updateForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const user = JSON.parse(localStorage.getItem("userProfile"));
+  if (!user) return alert("No user logged in");
+
+  const currentPassword = document.getElementById("currentPassword").value;
+  if (currentPassword !== user.password) {
+    return alert("Current password is incorrect");
+  }
+
+  const updatedUser = {
+    phone: user.phone,
+    name: document.getElementById("name").value,
+    dob: document.getElementById("dob").value,
+    age: document.getElementById("age").value,
+    gender: document.getElementById("gender").value,
+    district: document.getElementById("district").value,
+    email: document.getElementById("email").value,
+    address: document.getElementById("address").value,
+    pincode: document.getElementById("pincode").value,
+    password: document.getElementById("newPassword").value.trim() || user.password
+  };
+
+  const res = await fetch("http://localhost:5000/update-user", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedUser)
+  });
+
+  const data = await res.json();
+  alert(data.message || data.error);
+
+  if (res.ok) {
+    // Update local storage so profile shows new info
+    localStorage.setItem("userProfile", JSON.stringify(updatedUser));
+    location.href = "profile.html";
+  }
+});
+
 
 </script>
-
-
 </body>
 </html>

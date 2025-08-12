@@ -8,13 +8,11 @@
 </head>
 <body>
 
-  <!-- Header -->
   <div class="header">
     <h1>TrustyTown</h1>
     <h4>Your Local service finder app 🔎</h4>
   </div>
 
-  <!-- NAVBAR -->
   <div class="navbar">
     <h1>Welcome!</h1>
     <ul>
@@ -26,13 +24,11 @@
     </ul>
   </div>
 
-  <!-- PROFILE DETAILS ONLY (no picture) -->
   <div class="profile-container">
     <div class="profile-details">
       <h2>Welcome, <span id="user-name">User</span> 👋</h2>
       <ul id="profile-details"></ul>
 
-      <!-- Availability Switch -->
       <div class="switch-row">
         <span id="avail-label">Rest</span>
         <label class="switch">
@@ -47,24 +43,15 @@
     </div>
   </div>
 
-  <!-- Buttons -->
   <div class="center-btn">
     <button id="add-work-btn" onclick="location.href='addwork.html'">+ Add Work</button>
-    <button id="update-btn" onclick="location.href='update.html'">Update Details</button>
+    <button id="update-btn">Update Details</button> <!-- ✅ fixed ID -->
     <button id="logout-btn">Logout</button>
     <button id="delete-btn">Delete Account</button>
   </div>
 
-
-  
-
-
-
-</body>
-</html>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // ─── Auth check ───
   const user = JSON.parse(localStorage.getItem("userProfile"));
   if (!user) {
     alert("Please log in or register first!");
@@ -72,7 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // ─── Load profile ───
   document.getElementById("user-name").textContent = user.name ?? "User";
   document.getElementById("profile-details").innerHTML = `
     <li><strong>Age:</strong> ${user.age ?? "-"}</li>
@@ -85,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
     <li><strong>Date of Birth:</strong> ${user.dob ?? "-"}</li>
   `;
 
-  // ─── Work info ───
   const work = JSON.parse(localStorage.getItem("workProfile"));
   const hasWork = !!(work && work.work);
   const workBox = document.getElementById("work-box");
@@ -100,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  // ─── Availability toggle ───
   const toggle = document.getElementById("avail-toggle");
   const label = document.getElementById("avail-label");
 
@@ -127,27 +111,23 @@ document.addEventListener("DOMContentLoaded", () => {
     label.style.color = on ? "#28a745" : "#dc3545";
   }
 
-  // ─── Logout ───
   document.getElementById("logout-btn").addEventListener("click", () => {
     localStorage.clear();
     location.href = "login.html";
   });
 
-  // ─── Delete account ───
   document.getElementById("delete-btn").addEventListener("click", async () => {
     const input = prompt("To delete your account, enter your password:");
     if (input !== user.password) {
       alert("Incorrect password. Account not deleted.");
       return;
     }
-
     try {
       const res = await fetch("http://localhost:5000/delete-account", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: user.phone, password: input })
       });
-
       const result = await res.json();
       if (res.ok) {
         alert(result.message || "Account deleted.");
@@ -161,40 +141,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // AGE
 
-  function calculateAge(dob) {
-  const birthDate = new Date(dob);
-  const today = new Date();
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--;
-  }
-  return age;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const savedProfile = localStorage.getItem("userProfile");
-  if (!savedProfile) return;
-
-  const userData = JSON.parse(savedProfile);
-
-  // Prefill data
-  document.getElementById("name").textContent = userData.name || "";
-  document.getElementById("email").textContent = userData.email || "";
-  document.getElementById("phone").textContent = userData.phone || "";
-  document.getElementById("district").textContent = userData.district || "";
-  document.getElementById("address").textContent = userData.address || "";
-  document.getElementById("pincode").textContent = userData.pincode || "";
-
-  // Auto age
-  if (userData.dob) {
-    document.getElementById("age").textContent = calculateAge(userData.dob);
-  }
+// ✅ Update button redirect (uses userProfile instead of loggedInPhone)
+document.getElementById("update-btn").addEventListener("click", function () {
+    const user = JSON.parse(localStorage.getItem("userProfile"));
+    if (!user) {
+        alert("Please log in first.");
+        location.href = "login.html";
+        return;
+    }
+    window.location.href = "update.html"; // no need for ?phone
 });
-
-
 
 });
 </script>
+
+</body>
+</html>

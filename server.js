@@ -99,67 +99,39 @@ app.post('/delete-account', async (req, res) => {
   }
 });
 
-// ✅ Update Profile Route (Clean version)
-app.put("/update-profile", async (req, res) => {
-    try {
-        console.log("📩 Incoming Update Request:", req.body);
-
-        const { phone, name, email, dob, age, gender, district, address, pincode, password, newPassword } = req.body;
-
-        // Find user
-        const user = await User.findOne({ phone });
-        if (!user) {
-            console.log("❌ No user found with phone:", phone);
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        // If password is given, verify
-        if (password && password.trim() !== "") {
-            if (user.password !== password) {
-                console.log("❌ Incorrect password");
-                return res.status(400).json({ error: "Incorrect password" });
-            }
-        }
-
-        // Update only provided fields
-        if (name) user.name = name;
-        if (email) user.email = email;
-        if (dob) user.dob = dob;
-        if (age) user.age = age;
-        if (gender) user.gender = gender;
-        if (district) user.district = district;
-        if (address) user.address = address;
-        if (pincode) user.pincode = pincode;
-
-        if (newPassword && newPassword.trim() !== "") {
-            user.password = newPassword;
-        }
-
-        const updatedUser = await user.save();
-        console.log("✅ Updated User:", updatedUser);
-
-        res.json({ message: "Profile updated successfully", user: updatedUser });
-
-    } catch (err) {
-        console.error("🔥 Error updating profile:", err);
-        res.status(500).json({ error: err.message });
+// ✅ GET current user details
+app.get("/get-user/:phone", async (req, res) => {
+  try {
+    const user = await User.findOne({ phone: req.params.phone });
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
     }
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch user", details: err.message });
+  }
 });
 
+// ✅ UPDATE user details
+app.put("/update-user", async (req, res) => {
+  try {
+    const { phone, name, age, district, pincode, dob, gender, email, address } = req.body;
+    const updatedUser = await User.findOneAndUpdate(
+      { phone },
+      { $set: { name, age, district, pincode, dob, gender, email, address } },
+      { new: true } // return updated document
+    );
 
-// ✅ Get user details by phone
-app.get("/user/:phone", async (req, res) => {
-    try {
-        const user = await User.findOne({ phone: req.params.phone });
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-        res.json(user);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    if (updatedUser) {
+      res.json({ message: "✅ User updated successfully", user: updatedUser });
+    } else {
+      res.status(404).json({ message: "User not found" });
     }
+  } catch (err) {
+    res.status(500).json({ error: "Update failed", details: err.message });
+  }
 });
-
 
 // ✅ Start server
 app.listen(5000, () => {
